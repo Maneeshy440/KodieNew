@@ -1,0 +1,18 @@
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore environment configuration files
+.env
+
+# Ignore logs
+logs/
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore IDE or editor specific settings
+.idea/
+.vscode/
+
+# Ignore log files
+*.log
