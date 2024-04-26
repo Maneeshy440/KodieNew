@@ -17,7 +17,7 @@ exports.verify_otp = async (req, res, next) => {
     if (result === 1) {
       return res.status(200).json({
         success: true,
-        message: "OTP verified successfully.",
+        message: "Email Sucessfully Verified.",
       });
     } else if (result === 0) {
       return res.status(404).json({

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+margin-left: 300px;
+margin-top: 20px;
+
+    }
+    
+    h3{
+        margin-bottom: 15px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16px;
+        font: bold;
+    
+      
+    }
+    #border{
+        border: 0.2px  solid rgb(110, 107, 107);
+        width: 60%;
+    }
+ 
+ #head{
+    float: left;
+ }
+ #bank_pro{
+    float: left;
+ }
+
+ #cheq{
+    float: left;
+ }
+ #confi{
+    margin-left: 103px;
+    font-size: 14px;
+    color: rgb(69, 169, 216);
+  
+ }
+ #ch_check{
+    margin-left: 445px;
+
+ }
+ #bank_check{
+    margin-left: 100px; }
+ span{
+    font-size: 13px;
+    color: #575555;
+
+ }
+ #submit{
+    padding: 5px;
+    background: blue;
+    color: white;
+    border-radius: 5px;
+ }
+ #skip{ 
+    padding: 5px;
+    border-radius: 5px;
+ }
+ a {
+  text-decoration: none;
+}
+label{
+    color: red;
+    margin-left: 200px;
+    font-size: smaller;
+}
+
+</style>
+<body>
+   <section>
+    <h3><b>How would you like to pay this employee ? *</b></h3>
+    <p id="border"></p>
+    <div class="dir_pay">
+        <i id="automsted"> </i>
+        <p id="head"><b> Direct Deposit (Automated Process</b>)<br>
+        <span> iniate payment in Zoho payroll once the pay run is approved</span> </p>
+        <a href="#" id="confi" >Configure Now</a>
+    </div>
+    <br>
+    <br>
+    <p id="border"></p>
+    <br>
+    <!-- bank Transfer -->
+    <div class="bank_trn">
+    <i  id="bank_tran"></i>
+    <p id="bank_pro"><b> Bank Transfer (Manual Process)</b><br>
+    <span>Download Bank advice and process the payment through your bank's</span></p>
+
+    <input type="checkbox" name="select" id="bank_check" checked disabled>
+    </div>
+    <br>
+    <br>
+    <p id="border"></p>
+<!-- chaque -->
+<div class="chq">
+    <i id="cheque"></i>
+    <p  id="cheq"><b>cheque</b></p>
+    <input type="checkbox" name="select" id="ch_check" checked disabled>
+</div><br>
+<p id="border"></p>
+
+<button type="submit"class="btn btn-primary"> Save and Continue </button> <button type="button" class="btn btn-outline-secondary">Skip</button>
+   
+<label>* indicates mandatory fields</label></section>
+  
+</body>
+</html>

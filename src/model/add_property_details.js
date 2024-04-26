@@ -18,23 +18,23 @@ async function add_property_details(lookupData) {
     autolist: lookupData.autolist,
     p_state: lookupData.p_state,
     p_country: lookupData.p_country,
-    p_city: lookupData.p_state,
+    p_city: lookupData.p_city,
   };
 
   try {
     const [results] = await dbConn
       .promise()
-      .query("CALL USP_KODIE_SAVE_ADD_PROPERTY_DETAILS(?, @out_property_id)", [
+      .query("CALL USP_KODIE_SAVE_ADD_PROPERTY_DETAILS(?)", [
         JSON.stringify(add_property),
       ]);
-
-    const [output] = await dbConn
-      .promise()
-      .query("SELECT @out_property_id AS out_property_id");
-    const out_property_id = output[0].out_property_id;
-    console.log("Inserted Job ID:", out_property_id);
-
-    return { out_property_id, results };
+     console.log(results[0][0].result,"rersere");
+    // const [output] = await dbConn
+    //   .promise()
+    //   .query("SELECT @out_property_id AS out_property_id");
+    // const out_property_id = output[0].out_property_id;
+    // console.log("Inserted Job ID:", out_property_id);
+    // const property_id=
+     return results[0][0].result;
   } catch (error) {
     console.error("Error getting job details:", error);
     throw error;

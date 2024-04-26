@@ -29,8 +29,18 @@ async function getStatus(lookup) {
       const [results] = await dbConn.promise().query('CALL USP_KODIE_GET_CUSTOMER_ID(?)', [
         lookup
       ]);
-      console.log(results[0][0].TUS_TRANSACTION_ID,"id")
-      return results[0][0].TUS_TRANSACTION_ID;
+      console.log(results[0][0].TUS_TRANSACTION_ID.length,"asaaresulkt");
+      if(results[0][0].TUS_TRANSACTION_ID.length ===0)
+      {
+        results[0][0].TUS_TRANSACTION_ID=1;
+        return results[0][0].TUS_TRANSACTION_ID;
+      }
+      else
+      {
+        console.log(results[0][0].TUS_TRANSACTION_ID,"id")
+        return results[0][0].TUS_TRANSACTION_ID;
+      }
+      
     } catch (error) {
       console.error('Error getting key Features:', error);
       throw error;

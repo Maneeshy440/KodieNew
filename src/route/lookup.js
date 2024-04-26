@@ -12,5 +12,5 @@ router.post("/Profile_Completion",lookup.Profile_Completion)
 router.post("/Profile_Day",lookup.Profile_Day)
 //Subscription modules
 router.post("/subscription",lookup.Subscription)
-router.get("/getAccount_details/:user_id",lookup.get_Account_details)
+router.get(`/getAccount_details/:user_id`,lookup.get_Account_details)
 module.exports =router; 

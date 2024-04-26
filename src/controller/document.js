@@ -71,7 +71,7 @@ console.log("fileoriginalname",fileoriginalname);
                     message: "Document Successfully Stored",
                 });
             } else {
-                return res.status(404).json({
+                return res.status(500).json({
                     success: false,
                     error: true,
                     message: "Unexpected response from the server",

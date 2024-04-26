@@ -15,9 +15,9 @@ async function updateuserprofile(uad_key,first_name,last_name,country_code,phone
         physical_address,
         longitude,
         latitude,
-        profile_photo,
+        profile_photo || null,
       ]);
-
+     console.log(results,"results");
     console.log("Results:", results[0][0][0].result);
     return results[0][0][0].result;
   } catch (error) {
@@ -89,7 +89,7 @@ async function updateUsercompanyData(companydata,logo_name) {
   }
 }
 
-async function updateContactDetails(uad_key,country_code,old_phone_number,new_phone_number, ) 
+async function updateContactDetails(uad_key,country_code,old_phone_number,new_phone_number) 
 {
   try {
     const results = await dbConn

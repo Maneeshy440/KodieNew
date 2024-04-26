@@ -3116,7 +3116,7 @@ router.post(
  *               type: object
  *               properties:
  *                 notices_reminder_id:
- *                   type: integer
+ *                   type: string
  *                   description: ID of the notice reminder
  *       responses:
  *         '200':
@@ -3270,7 +3270,7 @@ router.post(
  *               type: object
  *               properties:
  *                 notices_reminder_id:
- *                   type: integer
+ *                   type: string
  *                   description: ID of the notice reminder to be deleted
  *       responses:
  *         '200':
@@ -3410,6 +3410,15 @@ router.post(
  *             schema:
  *               type: object
  *               properties:
+ *                 location:
+ *                   type: string
+ *                   description: location
+ *                 location_longitude:
+ *                   type: integer
+ *                   description: location_longitude
+ *                 location_latitude:
+ *                   type: integer
+ *                   description: location_latitude
  *                 property_type:
  *                   type: integer
  *                   description: property_type
@@ -3484,9 +3493,9 @@ router.post(
  *             schema:
  *               type: object
  *               properties:
- *                 account_id:
+ *                 user_id:
  *                   type: string
- *                   description: account_id
+ *                   description: user_id
  *       responses:
  *         '200':
  *           description: Successfully 
@@ -3535,9 +3544,9 @@ router.post(
  *             schema:
  *               type: object
  *               properties:
- *                 account_id:
+ *                 user_id:
  *                   type: string
- *                   description: account_id
+ *                   description: user_id
  *       responses:
  *         '200':
  *           description: Successfully 
@@ -3909,7 +3918,150 @@ router.post(
  *                 message: "Internal Server Error"
  */ 
 
+ /**
+ * @swagger
+ *   /api/v1/property_market_by_account_id:
+ *     post:
+ *       summary: Get Market Place Property list by account id
+ *       description: API to Get Market Place Property list by account id.
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 account_id:
+ *                   type: integer
+ *                   description: account_id
+ *       responses:
+ *         '200':
+ *           description: Successfully 
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: true
+ *                 message: "Create  successfully"
+ *         '400':
+ *           description: Bad request
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: false
+ *                 error: true
+ *                 message: "Bad request"
+ *         '404':
+ *           description: Get Market Place Property list by account id
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: false
+ *                 error: true
+ *                 message: "Get Market Place Property list by account id"
+ *         '500':
+ *           description: Internal Server Error
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: false    
+ *                 error: true
+ *                 message: "Internal Server Error"
+ */ 
 
+/**
+ * @swagger
+ *   /api/v1/property_market_place_enable_bidding:
+ *     post:
+ *       summary: property_market_place_enable_bidding
+ *       description: API to property_market_place_enable_bidding.
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 account_id:
+ *                   type: integer
+ *                   description: account_id
+ *                 property_id:
+ *                   type: integer
+ *                   description: property_id
+ *                 commencement_date:
+ *                   type: string
+ *                   description: commencement_date
+ *                 duration:
+ *                   type: integer
+ *                   description: duration
+ *                 list_price:
+ *                   type: string
+ *                   description: list_price
+ *                 auto_threshold:
+ *                   type: string
+ *                   description: auto_threshold
+ *                 notif_type:
+ *                   type: integer
+ *                   description: notif_type
+ *                 bid_open_reminder:
+ *                   type: integer
+ *                   description: bid_open_reminder pass 0 or 1
+ *                 bid_open_day:
+ *                   type: integer 
+ *                   description: bid_open_day pass lookup value for days
+ *                 bid_open_before:
+ *                   type: integer
+ *                   description: bid_open_before pass lookup value for before/After
+ *                 bid_close_reminder:
+ *                   type: string
+ *                   description: bid_close_reminder pass 0 or 1
+ *                 bid_close_day:
+ *                   type: string
+ *                   description: bid_close_day pass lookup value for days
+ *                 bid_close_before:
+ *                   type: string
+ *                   description: bid_close_before pass lookup value for before/After
+ *                 new_bid:
+ *                   type: integer
+ *                   description: new_bid pass 0 or 1
+ *                 new_bid_days:
+ *                   type: string
+ *                   description: new_bid_days pass lookup value for days
+ *                 new_bid_before:
+ *                   type: string
+ *                   description: new_bid_beforepass lookup value for before/After
+ *       responses:
+ *         '200':
+ *           description: Successfully 
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: true
+ *                 message: "property_market_place_enable_bidding inserted  successfully"
+ *         '400':
+ *           description: Bad request
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: false
+ *                 error: true
+ *                 message: "Bad request"
+ *         '404':
+ *           description: property_market_place_enable_bidding not found
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: false
+ *                 error: true
+ *                 message: "property_market_place_enable_bidding not found"
+ *         '500':
+ *           description: Internal Server Error
+ *           content:
+ *             application/json:
+ *               example:
+ *                 success: false
+ *                 error: true
+ *                 message: "Internal Server Error"
+ */ 
 
 
 
