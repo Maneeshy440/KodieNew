@@ -231,14 +231,17 @@ async function getallBidRequestforJob(Bidsforjobparams) {
     const uad_key=Bidsforjobparams.uad_key;
     const results = await dbConn.promise().query('CALL USP_KODIE_GET_ALL_BID_REQUESTS_FOR_JOB(?,?)',[job_id,uad_key]);
     console.log(results[0][0],"ressss");
-    
-    if (results[0][0].length === 0) {
-      console.log("Contractor details not found");
-      return null; 
+    // results[0][0].length === 0
+    if (results !=undefined && results.length >0) {
+      
+      return results[0][0]; 
     }
-   
+    else{
+      console.log("Contractor details not found");
+      return null ;
+    }
      
-    return results[0];
+    
   } catch (error) {
     console.error('Error getting job details:', error);
     throw error;
@@ -396,7 +399,7 @@ async function insertBidRequestData(bidRequestData) {
 
 async function acceptBidRequest(job_id,uad_key) {
   console.log("job_id",job_id);
-  console.log("uad_key",uad_key);   
+  console.log("uad_key",uad_key);
 
   try {
     const results = await dbConn.promise().query('CALL USP_KODIE_ACCEPT_JOB_BID_REQUEST(?,?)', [job_id,uad_key]);

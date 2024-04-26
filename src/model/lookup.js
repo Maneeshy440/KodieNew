@@ -2,10 +2,11 @@ var dbConn = require("../../config/db.config");
 
 async function lookup_details(lookupData) {
     try {
-      console.log("HiiModel",lookupData);
-      console.log(lookupData)
+      // console.log("HiiModel",lookupData);
+      // console.log(lookupData)
       const [results] = await dbConn.promise().query('CALL USP_KODIE_FETCH_LOOKUP_MASTER(?,?)', [lookupData.P_PARENT_CODE,lookupData.P_TYPE]);
       console.log("lookup Details Results:",  results[0]);
+   
       return results[0];
     } catch (error) {
       console.error('Error getting job details:', error);
@@ -49,7 +50,10 @@ async function lookup_details(lookupData) {
   async function Search_For_Rental(lookup) {
     console.log(lookup,"asasa")
     try {
-      const [results] = await dbConn.promise().query('CALL USP_KODIE_SEARCH_FOR_RENTAL_DETAILS(?,?,?,?,?,?,?,?,?)', [
+      const [results] = await dbConn.promise().query('CALL USP_KODIE_SEARCH_FOR_RENTAL_DETAILS(?,?,?,?,?,?,?,?,?,?,?,?)', [
+        lookup.location,
+        lookup.location_longitude,
+        lookup.location_latitude,
         lookup.property_type,
         lookup.min_price,
         lookup.max_price,
@@ -72,7 +76,7 @@ async function lookup_details(lookupData) {
     console.log(lookup,"asasa")
     try {
       const [results] = await dbConn.promise().query('CALL USP_KODIE_GET_COMPLETE_PROFILE(?)', [
-        lookup.account_id
+        lookup.user_id
       ]);
       
    console.log(results,"res")
@@ -83,10 +87,11 @@ async function lookup_details(lookupData) {
     }
   } 
   async function Profile_Day(lookup) {
-    console.log(lookup,"asasa")
+    // console.log(lookup,"asasa")
+
     try {
       const [results] = await dbConn.promise().query('CALL USP_KODIE_GET_TRIAL_DAY(?)', [
-        lookup.account_id
+        lookup.user_id
       ]);
       
    console.log(results,"res")
@@ -117,35 +122,46 @@ async function lookup_details(lookupData) {
       throw error;
     }
   }
-
-  async function getAccount_details(req, lookup) {
+  async function getAccount_details(req,lookup) {
+    console.log(lookup,"asasa")
     try {
-        const [results] = await dbConn.promise().query('CALL USP_KODIE_GET_ALL_PROFILE_DETAILS(?)', [
-            lookup.user_id
-        ]);
-        
-        if (results[0].length > 0) {
-            const additional_key_features = results[0][0].UAD_PROFILE_PHOTO_PATH;
-            results[0][0].UAD_PROFILE_PHOTO_PATH = additional_key_features;
-            const imageFileNames = results[0][0].UAD_PROFILE_PHOTO_PATH;
+      const [results] = await dbConn.promise().query('CALL USP_KODIE_GET_ACCOUNT_DETAILS_AS_Business(?)', [
+        lookup.user_id
+      ]);
+      console.log(results[0].length,"resultsAAAAA");
+      if(results[0].length >0)
+      {
+       
+   const additional_key_features = results[0][0].profile_path;
+   console.log(additional_key_features, "aassas");
+   const company_logo = results[0][0].business_data.company_logo;
+   console.log(company_logo, "company_logo");
+   results[0][0].UAD_PROFILE_PHOTO_PATH = additional_key_features;
+   const imageFileNames = results[0][0].UAD_PROFILE_PHOTO_PATH;
 
-            console.log("Image File Names:", imageFileNames);
-            const protocol = "https";
-            const basePath = `${protocol}://${req.get("host")}/upload/photo`;
-            const imagePaths = imageFileNames
-                ? imageFileNames.split(", ").map((fileName) => `${basePath}/${fileName.trim()}`)
-                : [];
-            console.log("Image Paths:", imagePaths);
-            results[0][0].image_path = imagePaths;
+   console.log("Image File Names:", imageFileNames);
+   const protocol ="https";
+   const basePath = `${protocol}://${req.get("host")}/upload/photo`;
+   const imagePaths = imageFileNames
+     ? imageFileNames
+         .split(", ")
+         .map((fileName) => `${basePath}/${fileName.trim()}`)
+     : [];
+   console.log("Image Paths:", imagePaths);
+   results[0][0].image_path = imagePaths;
+  
+      return results;
+      }
+      else
+      {
+        return null;
+      }
+  //  console.log(results[0][0].UAD_PROFILE_PHOTO_PATH,"res")
 
-            return results;
-        } else {
-            return null;
-        }
     } catch (error) {
-        console.error('Error getting key Features:', error);
-        throw error;
+      console.error('Error getting key Features:', error);
+      throw error;
     }
-}
+  }
 
 module.exports = {getAccount_details,Profile_Day,Subscription,Profile_Completion,lookup_details,get_key_features,add_feedback_details,Search_For_Rental};

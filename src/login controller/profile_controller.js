@@ -7,10 +7,11 @@ const ProfileController = {
   updateProfile: async (req, res) => {
     try {
       const uad_key = req.body.uad_key;
+      console.log(req.file,"file");
       const profile_path = req.file ? req.file.path : null;
       const profile_type = req.file ? req.file.mimetype : null;
       const profile_photo_name = req.file ? req.file.originalname : null;
-
+      console.log(profile_photo_name,"profile_photo_name")
 
       console.log("uad_key-->", uad_key);
       const profileData = req.body;
@@ -33,6 +34,7 @@ const ProfileController = {
         success: true,
         error: false,
         message: updatedProfile,
+        data:profileData
       });
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -121,7 +123,7 @@ const ProfileController = {
         contactData.old_phone_number,
         contactData.new_phone_number
       );
-
+     console.log(updatedContactData,"reser");
       const statusMessage = updatedContactData[0].Status;
       const errorMessage = updatedContactData[0].ErrorMessage;
 
@@ -143,41 +145,62 @@ const ProfileController = {
       res.status(500).json({ success: false, error: "Internal Server Error" });
     }
   },
-  deteleUserAccount: async (req, res) => {
+  deleteUserAccount: async (req, res) => {
     try {
-      const uad_key = req.body.uad_key;
-      console.log("uad_key-->", uad_key);
-
-      const contactData = req.body;
-      console.log(contactData, "data");
-
-      const deletedContactData = await ProfileModal.deleteUserAccount(
-        uad_key,
-        contactData.email,
-        contactData.phone_number
-      );
-
-      const statusMessage = deletedContactData[0].Status;
-      const errorMessage = deletedContactData[0].ErrorMessage;
-
-      if (statusMessage === "Success") {
-        res.status(200).json({
-          success: true,
-          error: false,
-          message: "User account deleted successfully",
+        console.log(req.body.uad_key.length, "req.body.uad_key.length");
+        console.log(req.body.email.length, "req.body.email.length");
+        console.log(req.body.phone_number.length, "req.body.phone_number.length");
+        if (req.body.email.length === 0 ) {
+            res.status(400).json({
+                success: false,
+                error: true,
+                message: "All Fields are required",
+            });
+        }
+        else if(req.body.phone_number.length === 0)
+        {
+          res.status(400).json({
+            success: false,
+            error: true,
+            message: "All Fields are required",
         });
-      } else {
-        res.status(400).json({
-          success: false,
-          error: true,
-          message: errorMessage,
-        });
-      }
+        }
+        else {
+            const uad_key = req.body.uad_key;
+            console.log("uad_key-->", uad_key);
+
+            const contactData = req.body;
+            console.log(contactData, "data");
+
+            const deletedContactData = await ProfileModal.deleteUserAccount(
+                uad_key,
+                contactData.email,
+                contactData.phone_number
+            );
+
+            const statusMessage = deletedContactData[0].Status;
+            const errorMessage = deletedContactData[0].ErrorMessage;
+
+            if (statusMessage === "Success") {
+                res.status(200).json({
+                    success: true,
+                    error: false,
+                    message: "User account deleted successfully",
+                });
+            } else {
+                res.status(400).json({
+                    success: false,
+                    error: true,
+                    message: errorMessage,
+                });
+            }
+        }
     } catch (error) {
-      console.error("Error updating Contact details:", error);
-      res.status(500).json({ success: false, error: "Internal Server Error" });
+        console.error("Error deleting user account:", error);
+        res.status(500).json({ success: false, error: error.message });
     }
-  },
+}
+,
 
   getUserCompanyDetails: async (req, res) =>{
     try {

@@ -21,7 +21,7 @@ function generateImagePaths(imageNames, request, prefixText) {
   const imageNamesArray = imageNames.split(",").map((name) => name.trim());
   const base_url = `${request.protocol}://${request.get(
     "host"
-  )}/upload/images/`;
+  )}/upload/images/`; 
 
   const imagePathsArray = imageNamesArray.map(
     (imageName) => `${base_url}${imageName}`
@@ -34,10 +34,10 @@ const JobController = {
   insertJobDetails: async (req, res) => {
     try {
       const jobDetails = req.body;
-      // console.log("jobDetails", jobDetails);
+      console.log("jobDetails", jobDetails);
 
       const result = await Job.insertJobDetails(jobDetails);
-      // console.log("result", result);
+      console.log("result", result);
       if (result.response === "fail") {
         return res.status(201).json({
           id: result.jobId,
@@ -69,7 +69,7 @@ const JobController = {
       const leftImage = req.files["leftImage"];
       const rightImage = req.files["rightImage"];
       const video = req.files["video"];
-
+    
       // console.log("frontImage", frontImage);
       // console.log("leftImage", leftImage);
       // console.log("rightImage", rightImage);
@@ -81,15 +81,15 @@ const JobController = {
           error: "At least one image or video must be provided.",
         });
       }
-
+    
       const uad_user_key = req.body.uad_user_key;
 
-
+    
       const insertFiles = async (files, type) => {
         const fileDetails = [];
-
+    
         const fileList = Array.isArray(files) ? files : [files];
-
+    
         for (const file of fileList) {
           const fileDetailsResult = await Job.insertJobImages(
             file,
@@ -97,13 +97,13 @@ const JobController = {
             type,
             "Job"
           );
-
+    
           fileDetails.push(fileDetailsResult);
         }
-
+    
         return fileDetails;
       };
-
+    
       if (frontImage) {
         const frontImageDetails = await insertFiles(frontImage, "front");
         const protocol = "https";
@@ -112,7 +112,7 @@ const JobController = {
         frontImage.imageUrl = imageUrl;
         console.log(frontImage.imageUrl);
       }
-
+    
       if (leftImage) {
         const leftImageDetails = await insertFiles(leftImage, "left");
         const protocol = "https";
@@ -120,9 +120,9 @@ const JobController = {
         const imageUrl = `${fileUrl}`;
         leftImage.imageUrl = imageUrl;
         console.log(leftImage.imageUrl);
-
+        
       }
-
+    
       if (rightImage) {
         const rightImageDetails = await insertFiles(rightImage, "right");
         const protocol = "https";
@@ -132,7 +132,7 @@ const JobController = {
         console.log(rightImage.imageUrl);
 
       }
-
+    
       if (video) {
         const videoDetails = await insertFiles(video, "Null");
         const protocol = "https";
@@ -141,10 +141,10 @@ const JobController = {
         video.imageUrl = imageUrl;
         console.log(video.imageUrl);
       }
-
+    
       res.status(200).json({
         success: true,
-        message: "Images/ Inserted Successfully",
+        message: "Images inserted successfully",
         error: false,
       });
     } catch (error) {
@@ -154,16 +154,16 @@ const JobController = {
 
   },
 
-
+  
 
   getJobDetails: async (req, res) => {
     try {
       const jobId = req.body.jm_job_id;
       console.log("jobId---", jobId);
-
+  
       const jobDetails = await Job.getJobDetails(jobId);
       console.log("jobDetails", jobDetails);
-
+  
       if (!jobDetails) {
         return res.status(404).json({
           success: false,
@@ -171,9 +171,9 @@ const JobController = {
           message: "Job details not found",
         });
       }
-
+  
       const imageNames = jobDetails.image_path;
-
+  
       console.log(imageNames, "imageNames");
 
       const protocol = "https"
@@ -182,12 +182,12 @@ const JobController = {
       const fullImagePathsArray = imageNames
         ? imageNames.split(",").map((imageName) => `${base_url}${imageName.trim()}`)
         : null;
-
+  
       console.log("fullImagePathsArray", fullImagePathsArray);
       jobDetails.image_file_path = fullImagePathsArray;
       console.log("jobDetails.image_file_path", jobDetails.image_file_path);
       delete jobDetails.image_path;
-
+  
       return res.status(200).json({
         success: true,
         error: false,
@@ -203,7 +203,7 @@ const JobController = {
       });
     }
   },
-
+  
 
   getAllJobDetails: async (req, res) => {
     try {
@@ -290,7 +290,7 @@ const JobController = {
       });
     } catch (error) {
       console.error("Error updating job:", error);
-      res.status(500).json({ success: false, error: "Internal Server Error" });
+      res.status(500).json({ success: false, error: error.message });
     }
   },
 
@@ -513,7 +513,7 @@ const JobController = {
       });
     } catch (error) {
       try {
-        const errorMsg = JSON.stringify(error.message) || "Unknown error";
+        const errorMsg = JSON.stringify(error.message) || "Unknown error"; 
         const moduleName = 'Bidding Module';
 
         await dbConn.promise().query('CALL USP_KODIE_LOG_ERRORS_PROC(?, ?, NOW())', [moduleName, errorMsg]);
@@ -538,13 +538,13 @@ const JobController = {
 
   getallBidRequestForJob: async (req, res) => {
     try {
-
+   
       const Bidsforjobparams = req.body;
-
-      console.log("Data:", Bidsforjobparams);
+      
+      // console.log("Data:", Bidsforjobparams);
       const contractorDetails = await Job.getallBidRequestforJob(Bidsforjobparams);
-      console.log(contractorDetails[0][0], "contr");
-
+    //  console.log(contractorDetails[0][0], "contr");
+     
       if (!contractorDetails) {
         return res.status(404).json({
           success: false,
@@ -553,11 +553,11 @@ const JobController = {
         });
       }
       const protocol = "https";
-      const base_url = process.env.BASE_URL || `${protocol}://${req.get("host")}/upload/images/`;
-      contractorDetails.forEach(contractor => {
-        contractor.UAD_PROFILE_PHOTO_PATH = `${base_url}${contractor.UAD_PROFILE_PHOTO_PATH}`;
-      });
-
+    const base_url = process.env.BASE_URL || `${protocol}://${req.get("host")}/upload/images/`;
+    contractorDetails.forEach(contractor => {
+      contractor.UAD_PROFILE_PHOTO_PATH = `${base_url}${contractor.UAD_PROFILE_PHOTO_PATH}`;
+    });
+  
       return res.status(200).json({
         success: true,
         error: false,
@@ -575,11 +575,11 @@ const JobController = {
   },
 
   getContactorDetailsByUserKey: async (req, res) => {
-    const user_key = req.params.user_key;
+    const user_key =req.params.user_key;
     try {
       const contractorDetails = await Job.getContractorbyUserKey(user_key);
       console.log(contractorDetails[0], "contr");
-
+  
       if (!contractorDetails) {
         return res.status(404).json({
           success: false,
@@ -588,11 +588,11 @@ const JobController = {
         });
       }
       const protocol = "https";
-      const base_url = process.env.BASE_URL || `${protocol}://${req.get("host")}/upload/images/`;
-      contractorDetails.forEach(contractor => {
-        contractor.UAD_PROFILE_PHOTO_PATH = `${base_url}${contractor.UAD_PROFILE_PHOTO_PATH}`;
-      });
-
+    const base_url = process.env.BASE_URL || `${protocol}://${req.get("host")}/upload/images/`;
+    contractorDetails.forEach(contractor => {
+      contractor.UAD_PROFILE_PHOTO_PATH = `${base_url}${contractor.UAD_PROFILE_PHOTO_PATH}`;
+    });
+  
       return res.status(200).json({
         success: true,
         error: false,
@@ -609,12 +609,12 @@ const JobController = {
     }
   },
 
-  getJobByFilterByAccountid: async (req, res) => {
+  getJobByFilterByAccountid : async (req, res) => {
     const Filterd_Job = req.body;
-    console.log(Filterd_Job, "flter");
+    console.log(Filterd_Job,"flter");
     p_Filter = Filterd_Job.job_filter;
     user_account_id = Filterd_Job.user_account_id;
-    page_no = Filterd_Job.page_no;
+    page_no =Filterd_Job.page_no;
     limit = Filterd_Job.limit;
     order_col = Filterd_Job.order_col;
     order_wise = Filterd_Job.order_wise;
@@ -628,27 +628,28 @@ const JobController = {
 
     try {
       const job_details = await Job.getJobByFilter
-        (
-          req,
-          p_Filter,
-          user_account_id,
-          page_no,
-          limit,
-          order_col,
-          order_wise
+      (
+        req,
+        p_Filter,
+        user_account_id,
+        page_no,
+        limit,
+        order_col,
+        order_wise
         );
-      // console.log(job_details[0][0],"JobDetails");
-      // console.log(job_details.result,"jobde");
-      console.log(job_details, "jobde2");
-      if (job_details[0] === undefined) {
-        res.status(200).json({
-          job_details: [],
-          success: false,
-          error: true,
-          message: "NO DATA FOUND"
-        });
-      }
-      else {
+        // console.log(job_details[0][0],"JobDetails");
+        // console.log(job_details.result,"jobde");
+        console.log(job_details,"jobde2");
+        if ( job_details[0] === undefined)
+        {
+          res.status(200).json({
+            job_details:[],
+            success: false,
+            error: true,
+            message: "NO DATA FOUND"
+          });
+        }
+        else{
         res.status(200).json({
           job_details: job_details,
           success: true,
@@ -656,22 +657,22 @@ const JobController = {
           message: "Job Details retrived By Filter"
         });
       }
-    } catch (error) {
-      console.error("Error retriving Job details:", error);
-      res.status(500).json({
-        message: "Error retriving Job details",
-        success: false,
-        error: true,
+      } catch (error) { 
+        console.error("Error retriving Job details:", error);
+        res.status(500).json({
+          message: "Error retriving Job details",
+          success: false, 
+          error: true,
 
-      });
-    }
+        });
+      }
   },
-  getJobByFilterByAccountid_Service: async (req, res) => {
+  getJobByFilterByAccountid_Service : async (req, res) => {
     const Filterd_Job = req.body;
-    console.log(Filterd_Job, "flter");
+    console.log(Filterd_Job,"flter");
     p_Filter = Filterd_Job.job_filter;
     user_account_id = Filterd_Job.user_account_id;
-    page_no = Filterd_Job.page_no;
+    page_no =Filterd_Job.page_no;
     limit = Filterd_Job.limit;
     order_col = Filterd_Job.order_col;
     order_wise = Filterd_Job.order_wise;
@@ -685,29 +686,30 @@ const JobController = {
 
     try {
       const job_details = await Job.getJobByFilter_Service
-        (
-          req,
-          p_Filter,
-          user_account_id,
-          page_no,
-          limit,
-          order_col,
-          order_wise
+      (
+        req,
+        p_Filter,
+        user_account_id,
+        page_no,
+        limit,
+        order_col,
+        order_wise
         );
-      // console.log(job_details.result,"jobdeSERV1");
-      // console.log(job_details[0],"jobde2SERV2");
-      // console.log(job_details[1][0],"jobde2SERV3");
-      // console.log( job_details[1][0].result ,"jobde2SERV4");
+        // console.log(job_details.result,"jobdeSERV1");
+        // console.log(job_details[0],"jobde2SERV2");
+        // console.log(job_details[1][0],"jobde2SERV3");
+        // console.log( job_details[1][0].result ,"jobde2SERV4");
 
-      if (job_details[0] === undefined) {
-        res.status(200).json({
-          job_details: [],
-          success: false,
-          error: true,
-          message: "NO DATA FOUND"
-        });
-      }
-      else {
+        if (job_details[0] === undefined)
+        {
+          res.status(200).json({
+            job_details:[],
+            success: false,
+            error: true,
+            message: "NO DATA FOUND"
+          });
+        }
+        else{
         res.status(200).json({
           job_details: job_details,
           success: true,
@@ -715,24 +717,24 @@ const JobController = {
           message: "Job Details retrived By Filter"
         });
       }
-    } catch (error) {
-      console.error("Error retriving Job details:", error);
-      res.status(500).json({
-        message: "Error retriving Job details",
-        success: false,
-        error: true,
+      } catch (error) { 
+        console.error("Error retriving Job details:", error);
+        res.status(500).json({
+          message: "Error retriving Job details",
+          success: false, 
+          error: true,
 
-      });
-    }
+        });
+      }
   },
   searchJobs: async (req, res) => {
     try {
       const searchedJobDetails = req.body;
       console.log("Job Details", searchedJobDetails);
-
+  
       const searchResult = await Job.searchJobs(searchedJobDetails);
       console.log("Search Result", searchResult);
-
+  
       if (searchResult) {
         return res.status(201).json({
           data: searchResult[0],
@@ -760,10 +762,10 @@ const JobController = {
     try {
       const jobId = req.params.job_id;
       console.log("jobId---", jobId);
-
+  
       const jobDetails = await Job.getJobSummury(jobId);
       console.log("jobDetails", jobDetails);
-
+  
       if (!jobDetails) {
         return res.status(404).json({
           success: false,
@@ -771,7 +773,7 @@ const JobController = {
           message: "Job details not found",
         });
       }
-
+  
       return res.status(200).json({
         success: true,
         error: false,
@@ -814,10 +816,10 @@ const JobController = {
   acceptBidRequest: async (req, res) => {
     try {
       const job_id = req.body.job_id;
-      const uad_key = req.body.uad_key;
-      console.log(job_id, uad_key, "job,uad");
+      const uad_key= req.body.uad_key;
+      console.log(job_id,uad_key,"job,uad");
 
-      const accpetedBidresult = await Job.acceptBidRequest(job_id, uad_key);
+      const accpetedBidresult = await Job.acceptBidRequest(job_id,uad_key);
       console.log("accpetedBidresult", accpetedBidresult[0]);
 
       if (!ArchieveResult) {

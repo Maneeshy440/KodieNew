@@ -24,18 +24,25 @@ exports.login = async (req, res, next) => {
     if(rows2[0][0].result === 1)
     {
       return res.status(200).json({
-        message: "Account Has Been Susupended",
+        message: "Account Has Been Suspended",
         success: "true",
         errors: "false",
       });
 
-    }  
+    }
+    
+    // const subscription = await stripe.subscriptions.retrieve(
+    //   'sub_1MowQVLkdIwHu7ixeRlqHVzs'
+    // );   
 
 
     const query = "SELECT UFUN_KODIE_VALIDATE_LOGIN_DETAILS_TEST(?);";
     const [rows] = await dbConn.execute(query, [req.body.email]);
     const password = rows[0]["UFUN_KODIE_VALIDATE_LOGIN_DETAILS_TEST(?)"];
     console.log(password, "pass");
+    // const isPasswordValid = await bcrypt.compare(req.body.password, password);
+ 
+    // console.log(isPasswordValid,"asasass");/8/8/81111
  
     const secretKey = "XkhZG4fW2t2W";
  
@@ -45,7 +52,7 @@ exports.login = async (req, res, next) => {
       try {
         const key = secretKey;
         const keyutf = CryptoJS.enc.Utf8.parse(key);
-        const iv = CryptoJS.enc.Utf8.parse("XkhZG4fW2t2W"); 
+        const iv = CryptoJS.enc.Utf8.parse("XkhZG4fW2t2W"); // Use the same IV used during encryption
         const decrypted = CryptoJS.AES.decrypt(password, keyutf, { iv: iv });
         const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
    
@@ -115,10 +122,10 @@ exports.login = async (req, res, next) => {
       : null;
    
      
-      console.log(protocol,"pspsps");
+     console.log(protocol,"pspsps");
      
       const uadKey = row2[0] && row2[0][0] && row2[0][0].UAD_KEY !== undefined ? row2[0][0].UAD_KEY : null;
-      console.log("fileUrl ",fileUrl);
+       console.log("fileUrl ",fileUrl);
      
       console.log(uadKey,"asasasasa");
       console.log("key",)

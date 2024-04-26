@@ -43,6 +43,7 @@ async function create_insert_reminder_notices(lookupData, file_name, file_type) 
   }
 }
 async function get_insert_reminder_notices_by_notices_id(lookupData,req) {
+  
   try {
     console.log("notices_body11", lookupData);
     console.log(req,"req")

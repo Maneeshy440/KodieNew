@@ -78,30 +78,83 @@ const subscription_controller = {
     });
   },
   checkSubscription: async (req, res) => {
-    console.log(req.body.account_id, "req.body");
-
-    const subscription_id = await subscription_model.getStatus(
-      req.body.account_id
-    );
-    console.log(subscription_id, "res");
-    const subscription = await stripe.subscriptions.retrieve(subscription_id);
-    console.log(subscription, "subscription");
-    res.status(200).json({
-      message: "Subscription check",
-      data: subscription,
-      success: true,
-      error: false,
-    });
+    try {
+      console.log(req.body.account_id.length, "req.body");
+      if (req.body.account_id.length === 0) {
+        res.status(400).json({
+          message: "Account id is required",
+          success: true,
+          error: false,
+        });
+      } else {
+        const subscription_id = await subscription_model.getStatus(
+          req.body.account_id
+        );
+        console.log(subscription_id, "res");
+        if(subscription_id ===1)
+        {
+          res.status(200).json({
+            message: "No such Subscription is find",
+            success: true,
+            error: false,
+          });
+        }
+        else
+        {
+          const subscription = await stripe.subscriptions.retrieve(
+            subscription_id
+          );
+          console.log(subscription, "subscription");
+          res.status(200).json({
+            message: "Subscription check",
+            data: subscription,
+            success: true,
+            error: false,
+          });
+        }
+        
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+        success: true,
+        error: false,
+      });
+    }
   },
   insertSubscription: async (req, res) => {
-    console.log(req.body, "response");
-    const insertData = await subscription_model.Subscription(req.body);
-    console.log(insertData, "insertData");
-    res.status(200).json({
-      message: insertData,
-      success: true,
-      error: false,
-    });
+
+    try
+    {
+       if(req.body.customer_id.length ===0 && req.body.subscription_id.length ===0)
+       {
+        res.status(400).json({
+          message: "Customer id & subscription id is requried",
+          success: true,
+          error: false,
+        });
+       }
+       else
+       {
+        console.log(req.body, "response");
+        const insertData = await subscription_model.Subscription(req.body);
+        console.log(insertData, "insertData");
+        res.status(200).json({
+          message: insertData,
+          success: true,
+          error: false,
+        });
+       }
+    }
+    catch(error)
+    {
+      res.status(500).json({
+        message: error.message,
+        success: true,
+        error: false,
+      });
+    }
+    
   },
   payment_Intent: async (req, res) => {
     console.log(req.body, "response");
@@ -119,9 +172,8 @@ const subscription_controller = {
       error: false,
     });
   },
- 
+
   add_demo: async (req, res) => {
-   
     const customer_id = req.body.customer_id;
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 500,
@@ -137,12 +189,11 @@ const subscription_controller = {
     const customer = await stripe.customers.retrieve(customer_id);
     console.log(customer, "customer");
 
-
-      const updatedPaymentIntent = await stripe.paymentIntents.update(pi, {
-        customer: customer_id,
-        setup_future_usage: 'on_session',
+    const updatedPaymentIntent = await stripe.paymentIntents.update(pi, {
+      customer: customer_id,
+      setup_future_usage: "on_session",
     });
-     console.log(updatedPaymentIntent,"updatedPaymentIntent");
+    console.log(updatedPaymentIntent, "updatedPaymentIntent");
 
     if (!customer.invoice_settings.default_payment_method) {
       console.log("inside", customer_id);
@@ -150,24 +201,24 @@ const subscription_controller = {
       const paymentMethod = pm;
       await attachPaymentMethod(customer_id, paymentMethod);
     }
-  
-        const customer2 = await stripe.customers.retrieve(customer_id);
-       console.log(customer2,"customer22")
-       const subscription = await stripe.subscriptions.create({
-        customer: req.body.customer_id,
-        items: [
-          {
-            price: req.body.price_id,
-          },
-        ],
-      });
-      console.log(subscription, "subscription");
-      res.status(200).json({
-        message: "Subscription Created",
-        data: subscription,
-        success: true,
-        error: false,
-      });
+
+    const customer2 = await stripe.customers.retrieve(customer_id);
+    console.log(customer2, "customer22");
+    const subscription = await stripe.subscriptions.create({
+      customer: req.body.customer_id,
+      items: [
+        {
+          price: req.body.price_id,
+        },
+      ],
+    });
+    console.log(subscription, "subscription");
+    res.status(200).json({
+      message: "Subscription Created",
+      data: subscription,
+      success: true,
+      error: false,
+    });
   },
 
   add_card: async (req, res) => {
